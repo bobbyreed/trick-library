@@ -1,5 +1,15 @@
 import React from 'react';
 
+function createTrick(name, description)
+{
+    const trick = {};
+    trick.name = name;
+    trick.description = description;
+    console.log(`Trick created: ${name}`);
+    return trick;
+}
+
+const halfcab = createTrick("Half Cab", "A 180-degree turn performed while riding switch.");
 // Trick Component
 const Trick = ({ tricks }) => {
     return (
