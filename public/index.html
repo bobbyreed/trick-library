@@ -9,12 +9,20 @@
     </style>
 </head>
 <body>
-    <h1>My Database Items</h1>
-    <div id="items">Loading...</div>
+    <h1>Trick Library Tables</h1>
+    <div class="nav">
+        <a href="#"><button>Login</button></a>
+        <a href="#"><button>Table View</button></a>
+        <a href="#"><button>Custom Views</button></a>
+        <a href="#"><button>Query Creator</button></a>
+    </div>
+    <h2>Tricks</h2>
+    
+    <div id="tricks">Loading...</div>
 
     <script>
         // Fetch data from your API
-        fetch('/.netlify/functions/get-items')
+        fetch('/.netlify/functions/get-tricks')
             .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -22,7 +30,92 @@
                 return response.json();
             })
             .then(data => {
-                const container = document.getElementById('items');
+                const container = document.getElementById('tricks');
+
+                // Check if data has an error property
+                if (data.error) {
+                    container.innerHTML = `<div style="color: red;">Error: ${data.error}</div>`;
+                    return;
+                }
+
+                // Check if data is an array
+                if (!Array.isArray(data)) {
+                    container.innerHTML = '<div style="color: red;">Error: Expected array from API</div>';
+                    return;
+                }
+
+                // Display the data
+                if (data.length === 0) {
+                    container.innerHTML = '<div>No items found</div>';
+                } else {
+                    container.innerHTML = data.map(item =>
+                        `<div class="item">${JSON.stringify(item)}</div>`
+                    ).join('');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('items').innerHTML =
+                    `<div style="color: red;">Error loading data: ${error.message}</div>`;
+            });
+    </script>
+    <h2>Locations</h2>
+    <div id="locations">Loading...</div>
+
+    <script>
+        // Fetch data from your API
+        fetch('/.netlify/functions/get-locations')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const container = document.getElementById('locations');
+
+                // Check if data has an error property
+                if (data.error) {
+                    container.innerHTML = `<div style="color: red;">Error: ${data.error}</div>`;
+                    return;
+                }
+
+                // Check if data is an array
+                if (!Array.isArray(data)) {
+                    container.innerHTML = '<div style="color: red;">Error: Expected array from API</div>';
+                    return;
+                }
+
+                // Display the data
+                if (data.length === 0) {
+                    container.innerHTML = '<div>No items found</div>';
+                } else {
+                    container.innerHTML = data.map(item =>
+                        `<div class="item">${JSON.stringify(item)}</div>`
+                    ).join('');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('items').innerHTML =
+                    `<div style="color: red;">Error loading data: ${error.message}</div>`;
+            });
+    </script>
+    
+    <h2>Skaters</h2>
+    <div id="skaters">Loading...</div>
+
+    <script>
+        // Fetch data from your API
+        fetch('/.netlify/functions/get-skaters')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                const container = document.getElementById('skaters');
 
                 // Check if data has an error property
                 if (data.error) {
