@@ -19,3 +19,25 @@ export default async (req, context) => {
     });
   }
 };
+
+exports.handler = async (event, context) => {
+  try {
+    // Fetch all three tables in parallel
+    const [table1, table2, table3] = await Promise.all([
+      pool.query('SELECT * FROM your_first_table ORDER BY id'),
+      pool.query('SELECT * FROM your_second_table ORDER BY id'),
+      pool.query('SELECT * FROM your_third_table ORDER BY id')
+    ]);
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        firstTable: table1.rows,
+        secondTable: table2.rows,
+        thirdTable: table3.rows
+      })
+    };
+  } catch (error) {
+    return { statusCode: 500, body: JSON.stringify({ error: error.message }) };
+  }
+};
