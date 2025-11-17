@@ -14,7 +14,7 @@
 <div id="table2-container">Loading...</div>
 <h2>Locations</h2>
 <div id="table3-container">Loading...</div>
-    <script>// In your index.html or app.js
+<script>// In your index.html or app.js
 async function loadAllData() {
   try {
     // Fetch from your combined endpoint
@@ -25,7 +25,7 @@ async function loadAllData() {
     displayTable('table1-container', data.firstTable, 'tricks');
     displayTable('table2-container', data.secondTable, 'skaters');
     displayTable('table3-container', data.thirdTable, 'locations');
-    console.log(JSON.parse(data));
+    console.log(data);
   } catch (error) {
     console.error('Error loading data:', error);
   }
