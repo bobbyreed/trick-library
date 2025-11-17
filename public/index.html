@@ -12,7 +12,7 @@
     <h1>Trick Library Tables</h1>
     <div class="nav">
         <a href="#"><button>Login</button></a>
-        <a href="#"><button>Table View</button></a>
+        <a href="./pages/tableViews.html"><button>Table View</button></a>
         <a href="#"><button>Custom Views</button></a>
         <a href="#"><button>Query Creator</button></a>
     </div>
@@ -144,48 +144,5 @@
                     `<div style="color: red;">Error loading data: ${error.message}</div>`;
             });
     </script>
-
-    <h2>All tables example (lecture 7 slide 8-9)</h2>
-    <div id="all-tables">Loading...
-        <script>// In your index.html or app.js
-            async function loadAllData() {
-            try {
-                // Fetch from your combined endpoint
-                const response = await fetch('/.netlify/functions/get-all-data');
-                const data = await response.json();
-
-                // Display each table
-                displayTable('table1-container', data.firstTable, 'First Table Name');
-                displayTable('table2-container', data.secondTable, 'Second Table Name');
-                displayTable('table3-container', data.thirdTable, 'Third Table Name');
-            } catch (error) {
-                console.error('Error loading data:', error);
-            }
-            }
-
-            function displayTable(containerId, rows, tableName) {
-            const container = document.getElementById(containerId);
-            if (!rows.length) {
-                container.innerHTML = `<p>No data in ${tableName}</p>`;
-                return;
-            }
-
-            // Create table HTML
-            const headers = Object.keys(rows[0]);
-            const tableHTML = `
-                <h3>${tableName}</h3>
-                <table>
-                <thead><tr>${headers.map(h => '<th>' + h + '</th>').join('')}</tr></thead>
-                <tbody>${rows.map(row =>
-                    '<tr>' + headers.map(h => '<td>' + row[h] + '</td>').join('') + '</tr>'
-                ).join('')}</tbody>
-                </table>
-            `;
-            container.innerHTML = tableHTML;
-            }
-
-            // Load data when page loads
-            window.addEventListener('DOMContentLoaded', loadAllData);</script>
-                </div>
             </body>
             </html>
