@@ -6,17 +6,26 @@
     <title>All Table View</title>
 </head>
 <body>
+
+<h1>All Tables View</h1>
+<h2>Skaters</h2>
+<div id="table1-container">Loading...</div>
+<h2>Tricks</h2>
+<div id="table2-container">Loading...</div>
+<h2>Locations</h2>
+<div id="table3-container">Loading...</div>
     <script>// In your index.html or app.js
 async function loadAllData() {
   try {
     // Fetch from your combined endpoint
-    const response = await fetch('/api/get-all-data');
+    const response = await fetch('/.netlify/functions/get-all-tables');
     const data = await response.json();
 
     // Display each table
-    displayTable('table1-container', data.firstTable, 'First Table Name');
-    displayTable('table2-container', data.secondTable, 'Second Table Name');
-    displayTable('table3-container', data.thirdTable, 'Third Table Name');
+    displayTable('table1-container', data.firstTable, 'tricks');
+    displayTable('table2-container', data.secondTable, 'skaters');
+    displayTable('table3-container', data.thirdTable, 'locations');
+    console.log(JSON.parse(data));
   } catch (error) {
     console.error('Error loading data:', error);
   }

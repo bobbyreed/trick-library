@@ -48,6 +48,7 @@
                 if (data.length === 0) {
                     container.innerHTML = '<div>No items found</div>';
                 } else {
+                    //create item from db tuple
                     container.innerHTML = data.map(item =>
                         `<div class="item">${JSON.stringify(item)}</div>`
                     ).join('');
