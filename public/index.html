@@ -271,13 +271,24 @@
             try {
                 const response = await fetch('/.netlify/functions/dashboard');
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
+                // Try to get the response data even if there's an error
                 const data = await response.json();
 
-                // Check if response is an error object
+                if (!response.ok) {
+                    // Show the actual API error message
+                    console.error('Dashboard API returned error:', data);
+                    const errorMsg = data.error || `HTTP error! status: ${response.status}`;
+                    const details = data.details || '';
+                    document.getElementById('stats-grid').innerHTML =
+                        `<div class="error">
+                            <strong>Error loading statistics:</strong><br>
+                            ${errorMsg}<br>
+                            ${details ? `<small>${details}</small>` : ''}
+                        </div>`;
+                    return;
+                }
+
+                // Check if response is an error object (shouldn't happen with 200 status)
                 if (data.error) {
                     console.error('Dashboard API error:', data.error);
                     document.getElementById('stats-grid').innerHTML = `<div class="error">Error loading statistics: ${data.error}</div>`;
@@ -287,7 +298,7 @@
                 // Check if overview exists
                 if (!data.overview) {
                     console.error('Dashboard response missing overview:', data);
-                    document.getElementById('stats-grid').innerHTML = '<div class="error">Invalid dashboard response</div>';
+                    document.getElementById('stats-grid').innerHTML = '<div class="error">Invalid dashboard response - missing overview data</div>';
                     return;
                 }
 
@@ -321,7 +332,12 @@
                 document.getElementById('stats-grid').innerHTML = statsHTML;
             } catch (error) {
                 console.error('Error loading dashboard:', error);
-                document.getElementById('stats-grid').innerHTML = `<div class="error">Error loading statistics. Please check the console for details.</div>`;
+                document.getElementById('stats-grid').innerHTML =
+                    `<div class="error">
+                        <strong>Error loading statistics:</strong><br>
+                        ${error.message}<br>
+                        <small>Check browser console and Netlify function logs for details</small>
+                    </div>`;
             }
         }
 
