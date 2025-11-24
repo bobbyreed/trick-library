@@ -12,27 +12,12 @@ export default async (req, context) => {
 
     // Parse request body
     const body = await req.json();
-    const { type, active } = body;
+    const { name, description, difficulty, type, landed, videoUrl } = body;
 
-    // Validate input
-    if (!type) {
+    // Validate required fields
+    if (!name) {
       return new Response(
-        JSON.stringify({ error: 'Type is required' }),
-        {
-          status: 400,
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-          }
-        }
-      );
-    }
-
-    // Validate type against CHECK constraint
-    const validTypes = ['Skateshop', 'Spot', 'Skatepark'];
-    if (!validTypes.includes(type)) {
-      return new Response(
-        JSON.stringify({ error: `Type must be one of: ${validTypes.join(', ')}` }),
+        JSON.stringify({ error: 'Name is required' }),
         {
           status: 400,
           headers: {
@@ -47,8 +32,15 @@ export default async (req, context) => {
 
     // Insert with parameterized query
     const result = await sql(
-      'INSERT INTO locations (type, active) VALUES ($1, $2) RETURNING *',
-      [type, active !== undefined ? active : true]
+      'INSERT INTO tricks (name, description, difficulty, type, landed, videoUrl) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      [
+        name,
+        description || null,
+        difficulty || 1,
+        type || 'Flatground',
+        landed !== undefined ? landed : false,
+        videoUrl || null
+      ]
     );
 
     return new Response(JSON.stringify(result[0]), {

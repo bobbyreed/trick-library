@@ -3,56 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Table View</title>
+    <title>Table View - Trick Library</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button, a button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        button:hover, a button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .badge-success { background: #d4edda; color: #155724; }
+        .badge-warning { background: #fff3cd; color: #856404; }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1>📊 Table View</h1>
+            <div class="nav">
+                <a href="/"><button>Dashboard</button></a>
+                <a href="./tableViews.html"><button>Table View</button></a>
+                <a href="./customViews.html"><button>Custom Views</button></a>
+                <a href="./queryCreator.html"><button>Query Creator</button></a>
+            </div>
+        </header>
 
-<h1>All Tables View</h1>
-<h2>Skaters</h2>
-<div id="table1-container">Loading...</div>
-<h2>Tricks</h2>
-<div id="table2-container">Loading...</div>
-<h2>Locations</h2>
-<div id="table3-container">Loading...</div>
-<script>// In your index.html or app.js
-async function loadAllData() {
-  try {
-    // Fetch from your combined endpoint
-    const response = await fetch('/.netlify/functions/get-all-tables');
-    const data = await response.json();
+        <div class="section">
+            <h2>🛹 Skaters</h2>
+            <div id="table1-container">
+                <div class="loading">Loading skaters...</div>
+            </div>
+        </div>
 
-    // Display each table
-    displayTable('table1-container', data.firstTable, 'tricks');
-    displayTable('table2-container', data.secondTable, 'skaters');
-    displayTable('table3-container', data.thirdTable, 'locations');
-    console.log(data);
-  } catch (error) {
-    console.error('Error loading data:', error);
-  }
-}
+        <div class="section">
+            <h2>🎯 Tricks</h2>
+            <div id="table2-container">
+                <div class="loading">Loading tricks...</div>
+            </div>
+        </div>
 
-function displayTable(containerId, rows, tableName) {
-  const container = document.getElementById(containerId);
-  if (!rows.length) {
-    container.innerHTML = `<p>No data in ${tableName}</p>`;
-    return;
-  }
+        <div class="section">
+            <h2>📍 Locations</h2>
+            <div id="table3-container">
+                <div class="loading">Loading locations...</div>
+            </div>
+        </div>
+    </div>
 
-  // Create table HTML
-  const headers = Object.keys(rows[0]);
-  const tableHTML = `
-    <h3>${tableName}</h3>
-    <table>
-      <thead><tr>${headers.map(h => '<th>' + h + '</th>').join('')}</tr></thead>
-      <tbody>${rows.map(row =>
-        '<tr>' + headers.map(h => '<td>' + row[h] + '</td>').join('') + '</tr>'
-      ).join('')}</tbody>
-    </table>
-  `;
-  container.innerHTML = tableHTML;
-}
+    <script>
+        async function loadAllData() {
+            try {
+                // Fetch from the combined endpoint
+                const response = await fetch('/.netlify/functions/get-all-data');
+                const data = await response.json();
 
-// Load data when page loads
-window.addEventListener('DOMContentLoaded', loadAllData);</script>
+                // Display each table
+                displayTable('table1-container', data.firstTable, 'Skaters');
+                displayTable('table2-container', data.secondTable, 'Tricks');
+                displayTable('table3-container', data.thirdTable, 'Locations');
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('table1-container').innerHTML = '<div class="error">Error loading data</div>';
+            }
+        }
+
+        function displayTable(containerId, rows, tableName) {
+            const container = document.getElementById(containerId);
+
+            if (!rows || rows.length === 0) {
+                container.innerHTML = `<p>No data in ${tableName}</p>`;
+                return;
+            }
+
+            // Create table HTML
+            const headers = Object.keys(rows[0]);
+            const tableHTML = `
+                <table>
+                    <thead>
+                        <tr>${headers.map(h => `<th>${formatHeader(h)}</th>`).join('')}</tr>
+                    </thead>
+                    <tbody>
+                        ${rows.map(row => `
+                            <tr>${headers.map(h => `<td>${formatCell(h, row[h])}</td>`).join('')}</tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            container.innerHTML = tableHTML;
+        }
+
+        function formatHeader(header) {
+            return header.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        function formatCell(header, value) {
+            // Format boolean values
+            if (value === true) return '<span class="badge badge-success">Yes</span>';
+            if (value === false) return '<span class="badge badge-warning">No</span>';
+            if (value === null) return '<em>null</em>';
+            return value;
+        }
+
+        // Load data when page loads
+        window.addEventListener('DOMContentLoaded', loadAllData);
+    </script>
 </body>
 </html>
