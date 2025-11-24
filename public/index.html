@@ -310,14 +310,31 @@
         async function loadAllTricks() {
             try {
                 const response = await fetch('/.netlify/functions/get-tricks');
-                const tricks = await response.json();
 
-                if (tricks.length === 0) {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Check if response is an error object
+                if (data.error) {
+                    document.getElementById('allTricks').innerHTML = `<div class="error">Error: ${data.error}</div>`;
+                    return;
+                }
+
+                // Check if data is an array
+                if (!Array.isArray(data)) {
+                    document.getElementById('allTricks').innerHTML = '<div class="error">Invalid response from server</div>';
+                    return;
+                }
+
+                if (data.length === 0) {
                     document.getElementById('allTricks').innerHTML = '<p>No tricks found</p>';
                     return;
                 }
 
-                const tricksHTML = tricks.map(trick => `
+                const tricksHTML = data.map(trick => `
                     <div class="item-card">
                         <h3>${trick.name}</h3>
                         <p>${trick.description || 'No description'}</p>
@@ -334,7 +351,7 @@
                 document.getElementById('allTricks').innerHTML = tricksHTML;
             } catch (error) {
                 console.error('Error loading tricks:', error);
-                document.getElementById('allTricks').innerHTML = '<div class="error">Error loading tricks</div>';
+                document.getElementById('allTricks').innerHTML = '<div class="error">Error loading tricks. Please try again.</div>';
             }
         }
 
@@ -352,14 +369,31 @@
             searchTimeout = setTimeout(async () => {
                 try {
                     const response = await fetch(`/.netlify/functions/search-tricks?q=${encodeURIComponent(query)}`);
-                    const tricks = await response.json();
 
-                    if (tricks.length === 0) {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+
+                    // Check if response is an error object
+                    if (data.error) {
+                        document.getElementById('searchResults').innerHTML = `<div class="error">Error: ${data.error}</div>`;
+                        return;
+                    }
+
+                    // Check if data is an array
+                    if (!Array.isArray(data)) {
+                        document.getElementById('searchResults').innerHTML = '<div class="error">Invalid response from server</div>';
+                        return;
+                    }
+
+                    if (data.length === 0) {
                         document.getElementById('searchResults').innerHTML = '<p>No tricks found</p>';
                         return;
                     }
 
-                    const resultsHTML = `<div class="item-grid">${tricks.map(trick => `
+                    const resultsHTML = `<div class="item-grid">${data.map(trick => `
                         <div class="item-card">
                             <h3>${trick.name}</h3>
                             <p>${trick.description || 'No description'}</p>
@@ -373,7 +407,7 @@
                     document.getElementById('searchResults').innerHTML = resultsHTML;
                 } catch (error) {
                     console.error('Error searching tricks:', error);
-                    document.getElementById('searchResults').innerHTML = '<div class="error">Error searching tricks</div>';
+                    document.getElementById('searchResults').innerHTML = '<div class="error">Error searching tricks. Please try again.</div>';
                 }
             }, 300);
         });
@@ -395,14 +429,31 @@
 
             try {
                 const response = await fetch(`/.netlify/functions/filter-tricks?${params}`);
-                const tricks = await response.json();
 
-                if (tricks.length === 0) {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                // Check if response is an error object
+                if (data.error) {
+                    document.getElementById('filteredTricks').innerHTML = `<div class="error">Error: ${data.error}</div>`;
+                    return;
+                }
+
+                // Check if data is an array
+                if (!Array.isArray(data)) {
+                    document.getElementById('filteredTricks').innerHTML = '<div class="error">Invalid response from server</div>';
+                    return;
+                }
+
+                if (data.length === 0) {
                     document.getElementById('filteredTricks').innerHTML = '<p>No tricks match your filters</p>';
                     return;
                 }
 
-                const tricksHTML = tricks.map(trick => `
+                const tricksHTML = data.map(trick => `
                     <div class="item-card">
                         <h3>${trick.name}</h3>
                         <p>${trick.description || 'No description'}</p>
@@ -419,7 +470,7 @@
                 document.getElementById('filteredTricks').innerHTML = tricksHTML;
             } catch (error) {
                 console.error('Error filtering tricks:', error);
-                document.getElementById('filteredTricks').innerHTML = '<div class="error">Error filtering tricks</div>';
+                document.getElementById('filteredTricks').innerHTML = '<div class="error">Error filtering tricks. Please try again.</div>';
             }
         }
 
